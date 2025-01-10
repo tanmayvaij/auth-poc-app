@@ -17,7 +17,7 @@ const RegisterScreen = () => {
 
   const register = () => {
     if (state.password === state.cpassword) {
-      router.push({ pathname: "/setPin", params: state });
+      router.push({ pathname: "/setPin", params: { ...state, api: "/sign-up" } });
     } else {
       Alert.alert("Passwords mismatch");
     }

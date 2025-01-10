@@ -6,7 +6,7 @@ import { randomUUID } from "expo-crypto";
 import { api } from "@/api";
 
 const SetPinScreen = () => {
-  const { email, password } = useLocalSearchParams();
+  const { email, password, api: myapi } = useLocalSearchParams();
 
   const [state, setState] = useState({
     pin: "",
@@ -22,7 +22,7 @@ const SetPinScreen = () => {
       const hash = randomUUID();
 
       api
-        .post("/sign-up", { email, password, pin: state.pin, hash })
+        .post(myapi as string, { email, password, pin: state.pin, hash })
         .then((res) => {
           if (res.data.isSuccess) {
             Promise.all([
@@ -30,7 +30,7 @@ const SetPinScreen = () => {
               setItemAsync("authToken", res.data.authToken),
             ])
               .then(() => {
-                router.replace("/dashboard")
+                router.replace("/dashboard");
               })
               .catch((err) => {
                 console.log(JSON.stringify(err, null, 1));

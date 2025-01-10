@@ -1,9 +1,6 @@
-import { api } from "@/api";
 import { Link, router } from "expo-router";
-import { setItemAsync } from "expo-secure-store";
 import { useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
-import { randomUUID } from "expo-crypto";
 
 const LoginScreen = () => {
   const [state, setState] = useState({
@@ -16,27 +13,7 @@ const LoginScreen = () => {
   };
 
   const login = () => {
-    const hash = randomUUID();
-
-    api
-      .post("/sign-in", { ...state, hash })
-      .then((res) => {
-        if (res.data.isSuccess) {
-          Promise.all([
-            setItemAsync("hash", hash),
-            setItemAsync("authToken", res.data.authToken),
-          ])
-            .then(() => {
-              router.replace("/dashboard");
-            })
-            .catch((err) => {
-              console.log(JSON.stringify(err, null, 1));
-            });
-        }
-      })
-      .catch((err) => {
-        console.log(JSON.stringify(err, null, 1));
-      });
+    router.push({ pathname: "/setPin", params: { ...state, api: "/sign-in" } });
   };
 
   return (

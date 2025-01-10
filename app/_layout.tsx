@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import "../global.css";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -21,7 +20,7 @@ export default function RootLayout() {
 
   return (
     <Stack>
-      <Stack.Screen name="login" />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="register" />
       <Stack.Screen name="dashboard" />
     </Stack>

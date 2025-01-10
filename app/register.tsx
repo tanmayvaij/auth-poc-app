@@ -1,9 +1,5 @@
-import { api } from "@/api";
-import { Link } from "expo-router";
 import { useState } from "react";
 import { View, Text, TextInput, Pressable, Alert } from "react-native";
-import { randomUUID } from "expo-crypto";
-import { setItemAsync } from "expo-secure-store";
 import { useRouter } from "expo-router";
 
 const RegisterScreen = () => {
@@ -21,34 +17,7 @@ const RegisterScreen = () => {
 
   const register = () => {
     if (state.password === state.cpassword) {
-      api
-        .post("/sign-up", { email: state.email, password: state.password })
-        .then((res) => {
-          const hash = randomUUID();
-
-          if (res.data.isSuccess) {
-            Promise.all([
-              setItemAsync("authToken", res.data.authToken),
-              setItemAsync("hash", hash),
-            ])
-              .then(() => {
-                api
-                  .post("/set-hash", { email: state.email, hash })
-                  .then((res) => {
-                    if (res.data.isSuccess) router.replace("/dashboard");
-                  })
-                  .catch((err) => {
-                    console.log(JSON.stringify(err, null, 1));
-                  });
-              })
-              .catch((err) => {
-                console.log(JSON.stringify(err, null, 1));
-              });
-          }
-        })
-        .catch((err) => {
-          console.log(JSON.stringify(err, null, 1));
-        });
+      router.push({ pathname: "/setPin", params: state });
     } else {
       Alert.alert("Passwords mismatch");
     }
@@ -78,15 +47,15 @@ const RegisterScreen = () => {
       />
       <Pressable onPress={register}>
         <Text className="p-5 bg-gray-950 text-white text-center font-medium m-2 rounded-md">
-          Register
+          Go to setup pin
         </Text>
       </Pressable>
-      <Text className="text-center mt-10 text-lg">
-        Already have an account ?{" "}
-        <Link className="text-blue-700 font-medium" href={"/login"}>
-          Login
-        </Link>
-      </Text>
+      <View className="text-center mt-10 text-lg flex flex-row items-center justify-center">
+        <Text className="mr-3">Already have an account ?</Text>
+        <Pressable onPress={() => router.back()}>
+          <Text className="text-blue-700 font-medium">Login</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
